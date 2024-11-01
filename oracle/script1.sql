@@ -4,7 +4,7 @@
 -- Created on: Nov 1, 2024
 -- Purpose: Create RO and RW roles to access schema objects.
 --          Grant those 2 roles to a new account.
--- Optional: Source schema can be locked out for security reasons.
+-- Optional: Source schema can be locked down for security reasons.
 -- ----------------------------------------------------------------
 SET DEFINE ON
 SET ECHO OFF
