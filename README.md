@@ -1,2 +1,3 @@
 # catalog
-Just some stuff that might be useful
+
+Folder called oracle have some Oracle SQL scripts in it
