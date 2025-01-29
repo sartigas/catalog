@@ -1,5 +1,5 @@
 -- ----------------------------------------------------------------
--- Script name: 10_role_plus_grants.sql
+-- Script name: 50_revoke_from_public.sql
 -- Author: Sergio Artigas
 -- Created on: Nov 19, 2024
 -- Purpose: Create role to access schema objects.
@@ -24,23 +24,14 @@ BEGIN
 END;
 /
 
-SPOOL script_001.sql APPEND
+SPOOL script_005.sql APPEND
 
--- Create role
-SELECT 'CREATE ROLE '||:SourceSchema||'_ROLE;'
-  FROM DUAL
-/
-
--- Select grants
-SELECT 'GRANT '||PRIVILEGE||' ON /* '||TP.TYPE||' */ "'||TP.GRANTOR||'"."'||TP.TABLE_NAME||'" TO '||:SourceSchema||'_ROLE;'
-  FROM DBA_TAB_PRIVS TP, DBA_SYNONYMS DS
- WHERE DS.TABLE_OWNER = TP.GRANTOR
-   AND TP.GRANTEE = DS.OWNER
-   AND DS.TABLE_NAME = TP.TABLE_NAME
-   AND TP.GRANTEE = 'PUBLIC'
-   -- AND TP.PRIVILEGE = 'EXECUTE'
-   AND TP.OWNER = :SourceSchema
-ORDER BY TP.TABLE_NAME
+SELECT 'REVOKE '||PRIVILEGE||' ON /* '||TP.TYPE||' */ "'||TP.GRANTOR||'"."'||TP.TABLE_NAME||'" FROM PUBLIC;'
+  FROM DBA_TAB_PRIVS TP
+ WHERE TP.GRANTEE = 'PUBLIC'
+   AND TP.TYPE != 'USER'
+   AND TP.GRANTOR = :SourceSchema
+ORDER BY TABLE_NAME
 /
 
 SPOOL OFF

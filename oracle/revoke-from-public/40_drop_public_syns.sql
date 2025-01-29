@@ -1,5 +1,5 @@
 -- ----------------------------------------------------------------
--- Script name: 50_revoke_from_public.sql
+-- Script name: 40_drop_public_syns.sql
 -- Author: Sergio Artigas
 -- Created on: Nov 19, 2024
 -- Purpose: Create role to access schema objects.
@@ -24,14 +24,14 @@ BEGIN
 END;
 /
 
-SPOOL script_005.sql APPEND
+SPOOL script_004.sql APPEND
 
-SELECT 'REVOKE '||PRIVILEGE||' ON /* '||TP.TYPE||' */ "'||TP.GRANTOR||'"."'||TP.TABLE_NAME||'" FROM PUBLIC;'
-  FROM DBA_TAB_PRIVS TP
- WHERE GRANTEE = 'PUBLIC'
-   -- AND TP.PRIVILEGE = 'EXECUTE'
-   AND TP.GRANTOR = :SourceSchema
-ORDER BY TABLE_NAME
+-- Select grants
+SELECT 'DROP PUBLIC SYNONYM "'||DS.SYNONYM_NAME||'";'
+  FROM DBA_SYNONYMS DS
+ WHERE DS.OWNER = 'PUBLIC'
+   AND DS.TABLE_OWNER = :SourceSchema
+ORDER BY DS.TABLE_NAME
 /
 
 SPOOL OFF
